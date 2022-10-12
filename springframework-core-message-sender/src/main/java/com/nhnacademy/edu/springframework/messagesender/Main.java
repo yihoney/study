@@ -4,12 +4,33 @@ import com.nhnacademy.edu.springframework.messagesender.service.EmailMessageSend
 import com.nhnacademy.edu.springframework.messagesender.service.MessageSendService;
 import com.nhnacademy.edu.springframework.messagesender.service.MessageSender;
 import com.nhnacademy.edu.springframework.messagesender.service.SmsMessageSender;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
 
     public static void main(String[] args) {
-        new MessageSendService(new SmsMessageSender()).doSendMessage();
-        new MessageSendService(new EmailMessageSender()).doSendMessage();
+
+        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans.xml")) {
+
+            MessageSendService messageSendService = context.getBean("messageSendService", MessageSendService.class);
+            messageSendService.doSendMessage();
+
+            /*MessageSender emailMessageSender = context.getBean("emailMessageSender", EmailMessageSender.class);
+            MessageSender smsMessageSender = context.getBean("smsMessageSender", SmsMessageSender.class);
+            emailMessageSender.sendMessage(new User("dk@email.com", "xxx"), "email");
+            smsMessageSender.sendMessage(new User("dk@email.com", "xxx"), "sms");*/
+
+            /*System.out.println("-------");
+            new MessageSendService(context.getBean("emailMessageSender", EmailMessageSender.class)).doSendMessage();
+            System.out.println("-------");
+            new MessageSendService(context.getBean("emailMessageSender", EmailMessageSender.class)).doSendMessage();
+            System.out.println("-------");
+            new MessageSendService(context.getBean("smsMessageSender", SmsMessageSender.class)).doSendMessage();
+            System.out.println("-------");
+            new MessageSendService(context.getBean("smsMessageSender", SmsMessageSender.class)).doSendMessage();*/
+        }
+        // new MessageSendService(new SmsMessageSender()).doSendMessage();
+        // new MessageSendService(new EmailMessageSender()).doSendMessage();
     }
 
 /*    private void sendSmsMessage(User user, String message) {
